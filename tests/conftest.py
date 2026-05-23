@@ -1,5 +1,4 @@
 import pytest
-import srl.commands
 from srl.utils import today
 from rich.console import Console
 from dataclasses import dataclass
@@ -7,6 +6,7 @@ import pathlib
 import json
 from datetime import datetime, timedelta
 from srl import cli
+import sys
 
 
 @dataclass
@@ -66,9 +66,12 @@ def mock_data(tmp_path, monkeypatch):
     for name, path in vars(paths).items():
         if name not in ("BACKUP_DIR", "DATA_DIR"):
             path.write_text("{}")
-        for mod in vars(srl.commands).values():
-            if hasattr(mod, name):
-                monkeypatch.setattr(f"{mod.__name__}.{name}", path)
+
+        for module in sys.modules.values():
+            if module and getattr(module, "__name__", "").startswith("srl.commands"):
+                if hasattr(module, name):
+                    monkeypatch.setattr(f"{module.__name__}.{name}", path)
+
         monkeypatch.setattr(f"srl.storage.{name}", path)
 
     yield paths

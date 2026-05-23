@@ -2,7 +2,7 @@ import pytest
 
 
 def test_add_by_name(parser):
-    args = parser.parse_args(["add", "Two Sum", "3"])
+    args = parser.parse_args(["add", "-p", "Two Sum", "3"])
     assert args.command == "add"
     assert args.name == "Two Sum"
     assert args.number is None
@@ -55,14 +55,14 @@ def test_mastered_count_long_flag(parser):
 def test_nextup_add(parser):
     args = parser.parse_args(["nextup", "add", "Binary Search"])
     assert args.command == "nextup"
-    assert args.action == "add"
+    assert args.handler
     assert args.name == "Binary Search"
 
 
 def test_nextup_add_with_file_short_flag(parser):
     args = parser.parse_args(["nextup", "add", "-f", "problems.txt"])
     assert args.command == "nextup"
-    assert args.action == "add"
+    assert args.handler
     assert args.file == "problems.txt"
     assert args.name is None
 
@@ -70,7 +70,7 @@ def test_nextup_add_with_file_short_flag(parser):
 def test_nextup_add_with_file_long_flag(parser):
     args = parser.parse_args(["nextup", "add", "--file", "problems.txt"])
     assert args.command == "nextup"
-    assert args.action == "add"
+    assert args.handler
     assert args.file == "problems.txt"
     assert args.name is None
 
@@ -78,14 +78,13 @@ def test_nextup_add_with_file_long_flag(parser):
 def test_nextup_list(parser):
     args = parser.parse_args(["nextup", "list"])
     assert args.command == "nextup"
-    assert args.action == "list"
-    assert args.name is None
+    assert args.handler
 
 
 def test_nextup_add_allow_mastered_flag_short(parser):
     args = parser.parse_args(["nextup", "add", "Binary Search", "--allow-mastered"])
     assert args.command == "nextup"
-    assert args.action == "add"
+    assert args.handler
     assert args.name == "Binary Search"
     assert args.allow_mastered
 
@@ -95,7 +94,7 @@ def test_nextup_add_allow_mastered_flag_file(parser):
         ["nextup", "add", "-f", "problems.txt", "--allow-mastered"]
     )
     assert args.command == "nextup"
-    assert args.action == "add"
+    assert args.handler
     assert args.file == "problems.txt"
     assert args.allow_mastered
 
@@ -103,19 +102,19 @@ def test_nextup_add_allow_mastered_flag_file(parser):
 def test_audit_pass(parser):
     args = parser.parse_args(["audit", "pass"])
     assert args.command == "audit"
-    assert args.audit_command == "pass"
+    assert args.handler
 
 
 def test_audit_fail(parser):
     args = parser.parse_args(["audit", "fail"])
     assert args.command == "audit"
-    assert args.audit_command == "fail"
+    assert args.handler
 
 
 def test_audit_history(parser):
     args = parser.parse_args(["audit", "history"])
     assert args.command == "audit"
-    assert args.audit_command == "history"
+    assert args.handler
 
 
 def test_remove_by_name(parser):
@@ -157,32 +156,15 @@ def test_config_get(parser):
 def test_take_command_basic(parser):
     args = parser.parse_args(["take", "1"])
     assert args.command == "take"
-    assert args.index == 1
-    assert args.action is None
-    assert args.rating is None
-
-
-def test_take_command_add_with_rating(parser):
-    args = parser.parse_args(["take", "2", "add", "5"])
-    assert args.command == "take"
-    assert args.index == 2
-    assert args.action == "add"
-    assert args.rating == 5
+    assert args.number == 1
 
 
 def test_take_command_invalid_index(parser):
     with pytest.raises(SystemExit):
         parser.parse_args(["take", "-1"])
 
-
-def test_take_command_invalid_action(parser):
     with pytest.raises(SystemExit):
-        parser.parse_args(["take", "0", "invalid"])
-
-
-def test_take_command_add_invalid_rating(parser):
-    with pytest.raises(SystemExit):
-        parser.parse_args(["take", "3", "add", "-3"])
+        parser.parse_args(["take", "0"])
 
 
 def test_calendar_command(parser):
@@ -226,20 +208,6 @@ def test_server_custom_host_port(parser):
     assert args.command == "server"
     assert args.host == "0.0.0.0"
     assert args.port == 9000
-
-
-def test_random_command(parser):
-    args = parser.parse_args(["random"])
-    assert args.command == "random"
-    assert hasattr(args, "handler")
-    assert not args.all
-
-
-def test_random_command_all_flag(parser):
-    args = parser.parse_args(["random", "--all"])
-    assert args.command == "random"
-    assert hasattr(args, "handler")
-    assert args.all
 
 
 def test_ledger_command(parser):

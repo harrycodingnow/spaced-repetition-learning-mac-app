@@ -258,9 +258,7 @@ def test_ledger_filter_by_name_sorted_oldest_first(console, mock_data, dump_json
 
 
 def test_ledger_filter_by_name_includes_audit_attempts(console, mock_data, dump_json):
-    progress_data = {
-        "two-sum": {"history": [{"rating": 3, "date": "2025-01-10"}]}
-    }
+    progress_data = {"two-sum": {"history": [{"rating": 3, "date": "2025-01-10"}]}}
     dump_json(mock_data.PROGRESS_FILE, progress_data)
 
     audit_data = {
@@ -282,15 +280,17 @@ def test_ledger_filter_by_name_includes_audit_attempts(console, mock_data, dump_
 def test_ledger_filter_by_number(console, mock_data, dump_json):
     progress_data = {
         "two-sum": {"history": [{"rating": 1, "date": "2025-01-01"}]},
+        "other-problem": {"history": [{"rating": 1, "date": "2025-01-01"}]},
     }
     dump_json(mock_data.PROGRESS_FILE, progress_data)
 
-    args = SimpleNamespace(number=1)
+    args = SimpleNamespace(index=1)
     ledger.handle(args=args, console=console)
 
     output = console.export_text()
     assert "two-sum" in output
     assert "two-sum (1)" in output
+    assert "other-problem" not in output
 
 
 def test_ledger_filter_by_number_out_of_range(console, mock_data, dump_json):
@@ -299,7 +299,7 @@ def test_ledger_filter_by_number_out_of_range(console, mock_data, dump_json):
     }
     dump_json(mock_data.PROGRESS_FILE, progress_data)
 
-    args = SimpleNamespace(number=99)
+    args = SimpleNamespace(index=99)
     ledger.handle(args=args, console=console)
 
     output = console.export_text()
