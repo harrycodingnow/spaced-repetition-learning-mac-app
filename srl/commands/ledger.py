@@ -8,6 +8,7 @@ from srl.storage import (
     AUDIT_FILE,
 )
 from srl.commands.list_ import get_due_problems
+from srl.utils import fuzzy_find
 
 
 def add_subparser(subparsers):
@@ -38,7 +39,15 @@ def add_subparser(subparsers):
         "--problem",
         type=str,
         dest="name",
-        help="Filter by problem name",
+        help="Filter results by exact problem name (case-insensitive)",
+    )
+
+    group.add_argument(
+        "-f",
+        "--fuzzy",
+        type=str,
+        dest="query",
+        help="Filter results using a fuzzy search query",
     )
 
     parser.set_defaults(handler=handle)
@@ -59,6 +68,10 @@ def handle(args, console: Console):
     ) + _get_audit_attemps(
         lower,
     )
+
+    query = getattr(args, "query", None)
+    if query:
+        all_attempts = fuzzy_find(query, all_attempts, lambda x: x["problem"])
 
     all_attempts.sort(key=lambda x: x["date"])
 
