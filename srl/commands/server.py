@@ -9,6 +9,7 @@ from srl.commands.backup.utils import (
 )
 from srl.commands.backup.verify import handle as verify_handle
 from types import SimpleNamespace
+from srl.storage import data_lock
 
 
 def add_subparser(subparsers):
@@ -51,7 +52,8 @@ def execute_command(argv, console: Console) -> dict:
     capture_console = Console(file=output, force_terminal=False)
 
     try:
-        args.handler(args, capture_console)
+        with data_lock():
+            args.handler(args, capture_console)
     except Exception:
         return {
             "status": "error",
@@ -163,14 +165,14 @@ class SRLRequestHandler(BaseHTTPRequestHandler):
         self.end_headers()
 
     def _send_error(self, error_msg: str, code: int = 400):
+        payload = json.dumps(
+            {"status": "error", "output": "", "error": error_msg}
+        ).encode("utf-8")
         self.send_response(code)
         self.send_header("Content-Type", "application/json")
+        self.send_header("Content-Length", str(len(payload)))
         self.end_headers()
-        self.wfile.write(
-            json.dumps({"status": "error", "output": "", "error": error_msg}).encode(
-                "utf-8"
-            )
-        )
+        self.wfile.write(payload)
 
     def log_message(self, format, *args):
         message = format % args

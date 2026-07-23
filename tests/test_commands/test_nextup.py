@@ -1,4 +1,5 @@
 from srl.commands import nextup
+from srl.commands.nextup.utils import get_next_up_problems
 from types import SimpleNamespace
 import shutil
 from pathlib import Path
@@ -72,6 +73,23 @@ def test_list_next_up_is_numbered(console):
 
     output = console.export_text()
     assert "1. Formatting problem" in output
+
+
+def test_next_up_uses_explicit_route_order(mock_data, dump_json):
+    dump_json(
+        mock_data.NEXT_UP_FILE,
+        {
+            "Two Sum": {"order": 3},
+            "Contains Duplicate": {"order": 1},
+            "Custom Question": {},
+        },
+    )
+
+    assert [name for name, _ in get_next_up_problems()] == [
+        "Contains Duplicate",
+        "Two Sum",
+        "Custom Question",
+    ]
 
 
 def test_list_next_up_empty(console):

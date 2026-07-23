@@ -1,5 +1,5 @@
 from srl.cli import build_parser
-from srl.storage import ensure_data_dir
+from srl.storage import data_lock, ensure_data_dir
 from srl.banner import banner
 from rich.console import Console
 
@@ -11,7 +11,11 @@ def main():
     console = Console()
 
     if hasattr(args, "handler"):
-        args.handler(args, console)
+        if getattr(args, "command", None) == "server":
+            args.handler(args, console)
+        else:
+            with data_lock():
+                args.handler(args, console)
     else:
         banner(console)
         parser.print_help()

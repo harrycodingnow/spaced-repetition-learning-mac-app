@@ -1,0 +1,151 @@
+category,name,url
+Arrays & Hashing,Contains Duplicate,https://leetcode.com/problems/contains-duplicate/description/
+Arrays & Hashing,Valid Anagram,https://leetcode.com/problems/valid-anagram/description/
+Arrays & Hashing,Two Sum,https://leetcode.com/problems/two-sum/description/
+Arrays & Hashing,Group Anagrams,https://leetcode.com/problems/group-anagrams/description/
+Arrays & Hashing,Top K Frequent Elements,https://leetcode.com/problems/top-k-frequent-elements/description/
+Arrays & Hashing,Encode and Decode Strings,https://leetcode.com/problems/encode-and-decode-strings/description/
+Arrays & Hashing,Product of Array Except Self,https://leetcode.com/problems/product-of-array-except-self/description/
+Arrays & Hashing,Valid Sudoku,https://leetcode.com/problems/valid-sudoku/description/
+Arrays & Hashing,Longest Consecutive Sequence,https://leetcode.com/problems/longest-consecutive-sequence/description/
+Two Pointers,Valid Palindrome,https://leetcode.com/problems/valid-palindrome/description/
+Two Pointers,Two Sum II Input Array Is Sorted,https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/description/
+Two Pointers,3Sum,https://leetcode.com/problems/3sum/description/
+Two Pointers,Container With Most Water,https://leetcode.com/problems/container-with-most-water/description/
+Two Pointers,Trapping Rain Water,https://leetcode.com/problems/trapping-rain-water/description/
+Sliding Window,Best Time to Buy and Sell Stock,https://leetcode.com/problems/best-time-to-buy-and-sell-stock/description/
+Sliding Window,Longest Substring Without Repeating Characters,https://leetcode.com/problems/longest-substring-without-repeating-characters/description/
+Sliding Window,Longest Repeating Character Replacement,https://leetcode.com/problems/longest-repeating-character-replacement/description/
+Sliding Window,Permutation in String,https://leetcode.com/problems/permutation-in-string/description/
+Sliding Window,Minimum Window Substring,https://leetcode.com/problems/minimum-window-substring/description/
+Sliding Window,Sliding Window Maximum,https://leetcode.com/problems/sliding-window-maximum/description/
+Stack,Valid Parentheses,https://leetcode.com/problems/valid-parentheses/description/
+Stack,Min Stack,https://leetcode.com/problems/min-stack/description/
+Stack,Evaluate Reverse Polish Notation,https://leetcode.com/problems/evaluate-reverse-polish-notation/description/
+Stack,Daily Temperatures,https://leetcode.com/problems/daily-temperatures/description/
+Stack,Car Fleet,https://leetcode.com/problems/car-fleet/description/
+Stack,Largest Rectangle in Histogram,https://leetcode.com/problems/largest-rectangle-in-histogram/description/
+Binary Search,Binary Search,https://leetcode.com/problems/binary-search/description/
+Binary Search,Search a 2D Matrix,https://leetcode.com/problems/search-a-2d-matrix/description/
+Binary Search,Koko Eating Bananas,https://leetcode.com/problems/koko-eating-bananas/description/
+Binary Search,Find Minimum in Rotated Sorted Array,https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/description/
+Binary Search,Search in Rotated Sorted Array,https://leetcode.com/problems/search-in-rotated-sorted-array/description/
+Binary Search,Time Based Key Value Store,https://leetcode.com/problems/time-based-key-value-store/description/
+Binary Search,Median of Two Sorted Arrays,https://leetcode.com/problems/median-of-two-sorted-arrays/description/
+Linked List,Reverse Linked List,https://leetcode.com/problems/reverse-linked-list/description/
+Linked List,Merge Two Sorted Lists,https://leetcode.com/problems/merge-two-sorted-lists/description/
+Linked List,Linked List Cycle,https://leetcode.com/problems/linked-list-cycle/description/
+Linked List,Reorder List,https://leetcode.com/problems/reorder-list/description/
+Linked List,Remove Nth Node From End of List,https://leetcode.com/problems/remove-nth-node-from-end-of-list/description/
+Linked List,Copy List With Random Pointer,https://leetcode.com/problems/copy-list-with-random-pointer/description/
+Linked List,Add Two Numbers,https://leetcode.com/problems/add-two-numbers/description/
+Linked List,Find the Duplicate Number,https://leetcode.com/problems/find-the-duplicate-number/description/
+Linked List,LRU Cache,https://leetcode.com/problems/lru-cache/description/
+Linked List,Merge K Sorted Lists,https://leetcode.com/problems/merge-k-sorted-lists/description/
+Linked List,Reverse Nodes in K Group,https://leetcode.com/problems/reverse-nodes-in-k-group/description/
+Trees,Invert Binary Tree,https://leetcode.com/problems/invert-binary-tree/description/
+Trees,Maximum Depth of Binary Tree,https://leetcode.com/problems/maximum-depth-of-binary-tree/description/
+Trees,Diameter of Binary Tree,https://leetcode.com/problems/diameter-of-binary-tree/description/
+Trees,Balanced Binary Tree,https://leetcode.com/problems/balanced-binary-tree/description/
+Trees,Same Tree,https://leetcode.com/problems/same-tree/description/
+Trees,Subtree of Another Tree,https://leetcode.com/problems/subtree-of-another-tree/description/
+Trees,Lowest Common Ancestor of a Binary Search Tree,https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/description/
+Trees,Binary Tree Level Order Traversal,https://leetcode.com/problems/binary-tree-level-order-traversal/description/
+Trees,Binary Tree Right Side View,https://leetcode.com/problems/binary-tree-right-side-view/description/
+Trees,Count Good Nodes in Binary Tree,https://leetcode.com/problems/count-good-nodes-in-binary-tree/description/
+Trees,Validate Binary Search Tree,https://leetcode.com/problems/validate-binary-search-tree/description/
+Trees,Kth Smallest Element in a BST,https://leetcode.com/problems/kth-smallest-element-in-a-bst/description/
+Trees,Construct Binary Tree From Preorder and Inorder Traversal,https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/description/
+Trees,Binary Tree Maximum Path Sum,https://leetcode.com/problems/binary-tree-maximum-path-sum/description/
+Trees,Serialize and Deserialize Binary Tree,https://leetcode.com/problems/serialize-and-deserialize-binary-tree/description/
+Heap / Priority Queue,Kth Largest Element in a Stream,https://leetcode.com/problems/kth-largest-element-in-a-stream/description/
+Heap / Priority Queue,Last Stone Weight,https://leetcode.com/problems/last-stone-weight/description/
+Heap / Priority Queue,K Closest Points to Origin,https://leetcode.com/problems/k-closest-points-to-origin/description/
+Heap / Priority Queue,Kth Largest Element in an Array,https://leetcode.com/problems/kth-largest-element-in-an-array/description/
+Heap / Priority Queue,Task Scheduler,https://leetcode.com/problems/task-scheduler/description/
+Heap / Priority Queue,Design Twitter,https://leetcode.com/problems/design-twitter/description/
+Heap / Priority Queue,Find Median From Data Stream,https://leetcode.com/problems/find-median-from-data-stream/description/
+Backtracking,Subsets,https://leetcode.com/problems/subsets/description/
+Backtracking,Combination Sum,https://leetcode.com/problems/combination-sum/description/
+Backtracking,Combination Sum II,https://leetcode.com/problems/combination-sum-ii/description/
+Backtracking,Permutations,https://leetcode.com/problems/permutations/description/
+Backtracking,Subsets II,https://leetcode.com/problems/subsets-ii/description/
+Backtracking,Generate Parentheses,https://leetcode.com/problems/generate-parentheses/description/
+Backtracking,Word Search,https://leetcode.com/problems/word-search/description/
+Backtracking,Palindrome Partitioning,https://leetcode.com/problems/palindrome-partitioning/description/
+Backtracking,Letter Combinations of a Phone Number,https://leetcode.com/problems/letter-combinations-of-a-phone-number/description/
+Backtracking,N Queens,https://leetcode.com/problems/n-queens/description/
+Tries,Implement Trie Prefix Tree,https://leetcode.com/problems/implement-trie-prefix-tree/description/
+Tries,Design Add and Search Words Data Structure,https://leetcode.com/problems/design-add-and-search-words-data-structure/description/
+Tries,Word Search II,https://leetcode.com/problems/word-search-ii/description/
+Graphs,Number of Islands,https://leetcode.com/problems/number-of-islands/description/
+Graphs,Max Area of Island,https://leetcode.com/problems/max-area-of-island/description/
+Graphs,Clone Graph,https://leetcode.com/problems/clone-graph/description/
+Graphs,Walls and Gates,https://leetcode.com/problems/walls-and-gates/description/
+Graphs,Rotting Oranges,https://leetcode.com/problems/rotting-oranges/description/
+Graphs,Pacific Atlantic Water Flow,https://leetcode.com/problems/pacific-atlantic-water-flow/description/
+Graphs,Surrounded Regions,https://leetcode.com/problems/surrounded-regions/description/
+Graphs,Course Schedule,https://leetcode.com/problems/course-schedule/description/
+Graphs,Course Schedule II,https://leetcode.com/problems/course-schedule-ii/description/
+Graphs,Graph Valid Tree,https://leetcode.com/problems/graph-valid-tree/description/
+Graphs,Number of Connected Components in an Undirected Graph,https://leetcode.com/problems/number-of-connected-components-in-an-undirected-graph/description/
+Graphs,Redundant Connection,https://leetcode.com/problems/redundant-connection/description/
+Graphs,Word Ladder,https://leetcode.com/problems/word-ladder/description/
+Advanced Graphs,Network Delay Time,https://leetcode.com/problems/network-delay-time/description/
+Advanced Graphs,Reconstruct Itinerary,https://leetcode.com/problems/reconstruct-itinerary/description/
+Advanced Graphs,Min Cost to Connect All Points,https://leetcode.com/problems/min-cost-to-connect-all-points/description/
+Advanced Graphs,Swim in Rising Water,https://leetcode.com/problems/swim-in-rising-water/description/
+Advanced Graphs,Alien Dictionary,https://leetcode.com/problems/alien-dictionary/description/
+Advanced Graphs,Cheapest Flights Within K Stops,https://leetcode.com/problems/cheapest-flights-within-k-stops/description/
+1-D Dynamic Programming,Climbing Stairs,https://leetcode.com/problems/climbing-stairs/description/
+1-D Dynamic Programming,Min Cost Climbing Stairs,https://leetcode.com/problems/min-cost-climbing-stairs/description/
+1-D Dynamic Programming,House Robber,https://leetcode.com/problems/house-robber/description/
+1-D Dynamic Programming,House Robber II,https://leetcode.com/problems/house-robber-ii/description/
+1-D Dynamic Programming,Longest Palindromic Substring,https://leetcode.com/problems/longest-palindromic-substring/description/
+1-D Dynamic Programming,Palindromic Substrings,https://leetcode.com/problems/palindromic-substrings/description/
+1-D Dynamic Programming,Decode Ways,https://leetcode.com/problems/decode-ways/description/
+1-D Dynamic Programming,Coin Change,https://leetcode.com/problems/coin-change/description/
+1-D Dynamic Programming,Maximum Product Subarray,https://leetcode.com/problems/maximum-product-subarray/description/
+1-D Dynamic Programming,Word Break,https://leetcode.com/problems/word-break/description/
+1-D Dynamic Programming,Longest Increasing Subsequence,https://leetcode.com/problems/longest-increasing-subsequence/description/
+1-D Dynamic Programming,Partition Equal Subset Sum,https://leetcode.com/problems/partition-equal-subset-sum/description/
+2-D Dynamic Programming,Unique Paths,https://leetcode.com/problems/unique-paths/description/
+2-D Dynamic Programming,Longest Common Subsequence,https://leetcode.com/problems/longest-common-subsequence/description/
+2-D Dynamic Programming,Best Time to Buy and Sell Stock With Cooldown,https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-cooldown/description/
+2-D Dynamic Programming,Coin Change II,https://leetcode.com/problems/coin-change-ii/description/
+2-D Dynamic Programming,Target Sum,https://leetcode.com/problems/target-sum/description/
+2-D Dynamic Programming,Interleaving String,https://leetcode.com/problems/interleaving-string/description/
+2-D Dynamic Programming,Longest Increasing Path in a Matrix,https://leetcode.com/problems/longest-increasing-path-in-a-matrix/description/
+2-D Dynamic Programming,Distinct Subsequences,https://leetcode.com/problems/distinct-subsequences/description/
+2-D Dynamic Programming,Edit Distance,https://leetcode.com/problems/edit-distance/description/
+2-D Dynamic Programming,Burst Balloons,https://leetcode.com/problems/burst-balloons/description/
+2-D Dynamic Programming,Regular Expression Matching,https://leetcode.com/problems/regular-expression-matching/description/
+Greedy,Maximum Subarray,https://leetcode.com/problems/maximum-subarray/description/
+Greedy,Jump Game,https://leetcode.com/problems/jump-game/description/
+Greedy,Jump Game II,https://leetcode.com/problems/jump-game-ii/description/
+Greedy,Gas Station,https://leetcode.com/problems/gas-station/description/
+Greedy,Hand of Straights,https://leetcode.com/problems/hand-of-straights/description/
+Greedy,Merge Triplets to Form Target Triplet,https://leetcode.com/problems/merge-triplets-to-form-target-triplet/description/
+Greedy,Partition Labels,https://leetcode.com/problems/partition-labels/description/
+Greedy,Valid Parenthesis String,https://leetcode.com/problems/valid-parenthesis-string/description/
+Intervals,Insert Interval,https://leetcode.com/problems/insert-interval/description/
+Intervals,Merge Intervals,https://leetcode.com/problems/merge-intervals/description/
+Intervals,Non Overlapping Intervals,https://leetcode.com/problems/non-overlapping-intervals/description/
+Intervals,Meeting Rooms,https://leetcode.com/problems/meeting-rooms/description/
+Intervals,Meeting Rooms II,https://leetcode.com/problems/meeting-rooms-ii/description/
+Intervals,Minimum Interval to Include Each Query,https://leetcode.com/problems/minimum-interval-to-include-each-query/description/
+Math & Geometry,Rotate Image,https://leetcode.com/problems/rotate-image/description/
+Math & Geometry,Spiral Matrix,https://leetcode.com/problems/spiral-matrix/description/
+Math & Geometry,Set Matrix Zeroes,https://leetcode.com/problems/set-matrix-zeroes/description/
+Math & Geometry,Happy Number,https://leetcode.com/problems/happy-number/description/
+Math & Geometry,Plus One,https://leetcode.com/problems/plus-one/description/
+Math & Geometry,Powx N,https://leetcode.com/problems/powx-n/description/
+Math & Geometry,Multiply Strings,https://leetcode.com/problems/multiply-strings/description/
+Math & Geometry,Detect Squares,https://leetcode.com/problems/detect-squares/description/
+Bit Manipulation,Single Number,https://leetcode.com/problems/single-number/description/
+Bit Manipulation,Number of 1 Bits,https://leetcode.com/problems/number-of-1-bits/description/
+Bit Manipulation,Counting Bits,https://leetcode.com/problems/counting-bits/description/
+Bit Manipulation,Reverse Bits,https://leetcode.com/problems/reverse-bits/description/
+Bit Manipulation,Missing Number,https://leetcode.com/problems/missing-number/description/
+Bit Manipulation,Sum of Two Integers,https://leetcode.com/problems/sum-of-two-integers/description/
+Bit Manipulation,Reverse Integer,https://leetcode.com/problems/reverse-integer/description/

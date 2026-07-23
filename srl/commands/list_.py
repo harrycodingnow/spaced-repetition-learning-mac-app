@@ -14,6 +14,7 @@ from srl.storage import (
     PROGRESS_FILE,
 )
 from srl.commands.config import Config
+from srl.commands.nextup.utils import get_next_up_problems
 
 
 def add_subparser(subparsers):
@@ -124,20 +125,14 @@ def get_due_problems(limit: int | None = None) -> list[tuple[str, str]]:
         if result:
             return result
 
-        next_up = load_json(NEXT_UP_FILE)
-
-        return [(prob, info.get("url", "")) for prob, info in next_up.items()]
+        return get_next_up_problems()
 
     if len(result) >= limit:
         return result
 
-    next_up = load_json(NEXT_UP_FILE)
-
     remaining = limit - len(result)
 
-    supplement = [
-        (prob, info.get("url", "")) for prob, info in list(next_up.items())[:remaining]
-    ]
+    supplement = get_next_up_problems()[:remaining]
 
     return result + supplement
 

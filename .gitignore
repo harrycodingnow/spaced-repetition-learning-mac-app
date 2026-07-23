@@ -11,6 +11,10 @@ env/
 # Build directory
 build/
 dist/
+.build/
+.swiftpm/
+xcuserdata/
+DerivedData/
 
 # IDE or editor-specific files
 .vscode/
@@ -22,7 +26,7 @@ dist/
 .env
 *.egg-info/
 .coverage
+.pytest_cache/
 
 # cli version
 srl/_version.py
-
