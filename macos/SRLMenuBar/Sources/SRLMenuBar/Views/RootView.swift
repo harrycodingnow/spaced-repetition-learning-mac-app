@@ -8,48 +8,56 @@ private enum AppTab: String, CaseIterable, Identifiable {
     case route = "Route"
 
     var id: String { rawValue }
+
+    var systemImage: String {
+        switch self {
+        case .today: return "checkmark.circle"
+        case .calendar: return "calendar"
+        case .activity: return "chart.xyaxis.line"
+        case .route: return "point.topleft.down.curvedto.point.bottomright.up"
+        }
+    }
 }
 
 struct RootView: View {
     @EnvironmentObject private var store: SRLDataStore
     @State private var selectedTab: AppTab = .today
+    @Namespace private var tabSelection
 
     var body: some View {
-        VStack(spacing: 0) {
-            header
+        ZStack {
+            LiquidBackdrop()
 
-            if let error = store.errorMessage {
-                StatusBanner(text: error, isError: true) {
-                    store.errorMessage = nil
+            VStack(spacing: 0) {
+                header
+
+                if let error = store.errorMessage {
+                    StatusBanner(text: error, isError: true) {
+                        store.errorMessage = nil
+                    }
+                    .padding(.horizontal, 14)
+                    .padding(.bottom, 8)
                 }
-                .padding(.horizontal, 16)
-                .padding(.bottom, 8)
-            } else if let notice = store.notice {
-                StatusBanner(text: notice, isError: false) {
-                    store.notice = nil
+
+                Group {
+                    switch selectedTab {
+                    case .today:
+                        TodayView()
+                    case .calendar:
+                        ScheduleCalendarView()
+                    case .activity:
+                        ActivityView()
+                    case .route:
+                        RouteView()
+                    }
                 }
-                .padding(.horizontal, 16)
-                .padding(.bottom, 8)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+
+                footer
             }
-
-            Group {
-                switch selectedTab {
-                case .today:
-                    TodayView()
-                case .calendar:
-                    ScheduleCalendarView()
-                case .activity:
-                    ActivityView()
-                case .route:
-                    RouteView()
-                }
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-
-            footer
         }
         .frame(width: IslandMetrics.expandedWidth, height: IslandMetrics.expandedHeight)
-        .background(Color.black)
+        .clipped()
         .foregroundColor(.white)
         .colorScheme(.dark)
         .task {
@@ -58,14 +66,30 @@ struct RootView: View {
         .onReceive(NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification)) { _ in
             Task { await store.refresh() }
         }
+        .onChange(of: store.notice) { notice in
+            guard let notice else { return }
+            Task { @MainActor in
+                try? await Task.sleep(nanoseconds: 2_200_000_000)
+                guard store.notice == notice else { return }
+                withAnimation(.easeOut(duration: 0.18)) {
+                    store.notice = nil
+                }
+            }
+        }
     }
 
     private var header: some View {
-        VStack(spacing: 6) {
+        VStack(spacing: 5) {
             HStack(spacing: 8) {
                 Image(systemName: "brain.head.profile")
-                    .font(.headline.weight(.semibold))
-                    .foregroundColor(.green)
+                    .font(.subheadline.weight(.semibold))
+                    .symbolRenderingMode(.hierarchical)
+                    .foregroundColor(LiquidTheme.accent)
+                    .frame(width: 24, height: 24)
+                    .background(
+                        Circle()
+                            .fill(LiquidTheme.accent.opacity(0.12))
+                    )
 
                 Text("Spaced Repetition")
                     .font(.subheadline.weight(.semibold))
@@ -74,63 +98,102 @@ struct RootView: View {
 
                 Text("\(store.dueToday.count) due · \(store.routeCompletedCount)/\(store.route.count)")
                     .font(.caption2)
-                    .foregroundColor(Color.white.opacity(0.58))
+                    .foregroundColor(LiquidTheme.secondaryText)
 
                 if store.isLoading {
                     ProgressView()
                         .controlSize(.small)
-                        .frame(width: 18)
+                        .frame(width: 24)
                 } else {
                     Button {
                         Task { await store.refresh() }
                     } label: {
                         Image(systemName: "arrow.clockwise")
+                            .font(.caption.weight(.semibold))
+                            .frame(width: 16, height: 16)
                     }
-                    .buttonStyle(.borderless)
-                    .frame(width: 18)
+                    .liquidButtonStyle()
+                    .controlSize(.mini)
                     .help("Reload ~/.srl data")
                 }
             }
-            .frame(height: 38)
+            .frame(height: 34)
 
-            Picker("View", selection: $selectedTab) {
+            HStack(spacing: 2) {
                 ForEach(AppTab.allCases) { tab in
-                    Text(tab.rawValue).tag(tab)
+                    Button {
+                        withAnimation(.easeInOut(duration: 0.20)) {
+                            selectedTab = tab
+                        }
+                    } label: {
+                        HStack(spacing: 5) {
+                            Image(systemName: tab.systemImage)
+                                .font(.system(size: 10, weight: .semibold))
+                            Text(tab.rawValue)
+                                .font(.caption.weight(.medium))
+                        }
+                        .foregroundColor(
+                            selectedTab == tab ? .white : LiquidTheme.secondaryText
+                        )
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 24)
+                        .background {
+                            if selectedTab == tab {
+                                Capsule(style: .continuous)
+                                    .fill(LiquidTheme.accent.opacity(0.18))
+                                    .overlay {
+                                        Capsule(style: .continuous)
+                                            .stroke(Color.white.opacity(0.12), lineWidth: 0.6)
+                                    }
+                                    .matchedGeometryEffect(id: "selected-tab", in: tabSelection)
+                            }
+                        }
+                        .contentShape(Capsule(style: .continuous))
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityAddTraits(selectedTab == tab ? .isSelected : [])
                 }
             }
-            .pickerStyle(.segmented)
-            .labelsHidden()
+            .padding(3)
+            .liquidGlassSurface(cornerRadius: 14, tint: Color.white.opacity(0.025))
         }
-        .padding(.horizontal, 16)
+        .padding(.horizontal, 14)
         .padding(.bottom, 8)
     }
 
     private var footer: some View {
-        HStack {
-            Button {
-                NSWorkspace.shared.open(store.dataDirectory)
-            } label: {
-                Label("Open data", systemImage: "folder")
-            }
-            .buttonStyle(.borderless)
-
-            Spacer()
-
+        ZStack {
             Text("Uses ~/.srl")
                 .font(.caption2)
-                .foregroundColor(Color.white.opacity(0.58))
+                .foregroundColor(LiquidTheme.tertiaryText)
 
-            Spacer()
+            HStack {
+                Button {
+                    NSWorkspace.shared.open(store.dataDirectory)
+                } label: {
+                    Label("Open data", systemImage: "folder")
+                }
+                .buttonStyle(.plain)
+                .foregroundColor(LiquidTheme.secondaryText)
 
-            Button("Quit") {
-                NSApplication.shared.terminate(nil)
+                Spacer()
+
+                Button("Quit") {
+                    NSApplication.shared.terminate(nil)
+                }
+                .buttonStyle(.plain)
+                .foregroundColor(LiquidTheme.secondaryText)
             }
-            .buttonStyle(.borderless)
         }
         .font(.caption)
-        .padding(.horizontal, 16)
+        .padding(.horizontal, 14)
         .frame(height: 30)
-        .background(Color.white.opacity(0.055))
+        .background(.ultraThinMaterial)
+        .overlay(alignment: .top) {
+            Rectangle()
+                .fill(Color.white.opacity(0.10))
+                .frame(height: 0.5)
+        }
     }
 }
 
@@ -151,11 +214,11 @@ private struct StatusBanner: View {
             }
             .buttonStyle(.borderless)
         }
-        .foregroundColor(isError ? .red : .green)
+        .foregroundColor(isError ? .red : LiquidTheme.accent)
         .padding(10)
-        .background(
-            RoundedRectangle(cornerRadius: 9, style: .continuous)
-                .fill((isError ? Color.red : Color.green).opacity(0.10))
+        .liquidGlassSurface(
+            cornerRadius: 12,
+            tint: (isError ? Color.red : LiquidTheme.accent).opacity(0.08)
         )
     }
 }

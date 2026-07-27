@@ -28,7 +28,7 @@ struct ActivityHeatmap: View {
                     ForEach(0..<7, id: \.self) { day in
                         Text(weekdayLabel(day))
                             .font(.system(size: 8, design: .monospaced))
-                            .foregroundColor(Color.white.opacity(0.58))
+                            .foregroundColor(LiquidTheme.secondaryText)
                             .frame(width: 22, height: cellSize)
                     }
                 }
@@ -49,6 +49,7 @@ struct ActivityHeatmap: View {
                                             .frame(width: cellSize, height: cellSize)
                                             .help("\(SRLDay.string(normalizedDate)): \(count) attempt\(count == 1 ? "" : "s")")
                                             .accessibilityLabel("\(SRLDay.string(normalizedDate)), \(count) attempts")
+                                            .accessibilityHidden(normalizedDate > today)
                                     }
                                 }
                                 .id(week)
@@ -72,16 +73,16 @@ struct ActivityHeatmap: View {
                 Text("More")
             }
             .font(.caption2)
-            .foregroundColor(Color.white.opacity(0.58))
+            .foregroundColor(LiquidTheme.secondaryText)
         }
     }
 
     private func color(for count: Int) -> Color {
         switch count {
-        case 0: return Color.white.opacity(0.12)
-        case 1: return Color.green.opacity(0.38)
-        case 2: return Color.green.opacity(0.68)
-        default: return Color.green
+        case 0: return Color.white.opacity(0.09)
+        case 1: return LiquidTheme.accent.opacity(0.36)
+        case 2: return LiquidTheme.accent.opacity(0.66)
+        default: return LiquidTheme.accent
         }
     }
 

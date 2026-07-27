@@ -2,9 +2,7 @@ import SwiftUI
 
 struct ScheduleCalendarView: View {
     @EnvironmentObject private var store: SRLDataStore
-    @State private var visibleMonth = Calendar.current.date(
-        from: Calendar.current.dateComponents([.year, .month], from: Date())
-    ) ?? Date()
+    @State private var visibleWeekAnchor = Date()
     @State private var selectedDate = Calendar.current.startOfDay(for: Date())
 
     private var calendar: Calendar {
@@ -19,167 +17,242 @@ struct ScheduleCalendarView: View {
 
     var body: some View {
         ScrollView {
-            VStack(spacing: 12) {
-                SectionCard("Future review schedule", systemImage: "calendar.badge.clock") {
-                    monthControls
-                    weekdayHeader
-                    monthGrid
+            VStack(spacing: 10) {
+                SectionCard("Review week", systemImage: "calendar.badge.clock") {
+                    weekControls
+                    weekGrid
                 }
 
                 selectedDayCard
             }
-            .padding(.horizontal, 16)
-            .padding(.bottom, 16)
+            .padding(.horizontal, 14)
+            .padding(.bottom, 12)
         }
     }
 
-    private var monthControls: some View {
+    private var weekControls: some View {
         HStack {
-            Button {
-                moveMonth(by: -1)
-            } label: {
-                Image(systemName: "chevron.left")
+            weekButton(systemImage: "chevron.left", help: "Previous week") {
+                moveWeek(by: -1)
             }
-            .buttonStyle(.borderless)
 
             Spacer()
 
-            Button(visibleMonth.formatted(.dateTime.month(.wide).year())) {
-                visibleMonth = monthStart(for: Date())
+            Button {
+                visibleWeekAnchor = Date()
                 selectedDate = calendar.startOfDay(for: Date())
+            } label: {
+                Text(weekRangeTitle)
+                    .font(.caption.weight(.semibold))
+                    .monospacedDigit()
+                    .padding(.horizontal, 10)
+                    .frame(height: 24)
+                    .contentShape(Capsule(style: .continuous))
+                    .liquidGlassSurface(
+                        cornerRadius: 12,
+                        tint: LiquidTheme.accent.opacity(0.035),
+                        interactive: true
+                    )
             }
-            .buttonStyle(.borderless)
-            .font(.headline)
+            .buttonStyle(.plain)
+            .help("Return to this week")
+            .accessibilityLabel("Week \(weekRangeTitle)")
+            .accessibilityHint("Return to the current week")
 
             Spacer()
 
-            Button {
-                moveMonth(by: 1)
-            } label: {
-                Image(systemName: "chevron.right")
-            }
-            .buttonStyle(.borderless)
-        }
-    }
-
-    private var weekdayHeader: some View {
-        LazyVGrid(columns: columns, spacing: 5) {
-            ForEach(calendar.veryShortStandaloneWeekdaySymbols, id: \.self) { symbol in
-                Text(symbol)
-                    .font(.caption2.weight(.semibold))
-                    .foregroundColor(Color.white.opacity(0.58))
-                    .frame(maxWidth: .infinity)
+            weekButton(systemImage: "chevron.right", help: "Next week") {
+                moveWeek(by: 1)
             }
         }
+        .frame(height: 20)
     }
 
-    private var monthGrid: some View {
+    private func weekButton(
+        systemImage: String,
+        help: String,
+        action: @escaping () -> Void
+    ) -> some View {
+        Button(action: action) {
+            Image(systemName: systemImage)
+                .font(.caption.weight(.semibold))
+                .foregroundColor(Color.white.opacity(0.78))
+                .frame(width: 16, height: 16)
+                .contentShape(Rectangle())
+        }
+        .liquidButtonStyle()
+        .controlSize(.mini)
+        .help(help)
+        .accessibilityLabel(help)
+    }
+
+    private var weekGrid: some View {
         LazyVGrid(columns: columns, spacing: 5) {
-            ForEach(Array(monthCells.enumerated()), id: \.offset) { _, date in
-                if let date {
-                    dayCell(date)
-                } else {
-                    Color.clear
-                        .frame(height: 48)
-                }
+            ForEach(weekDates, id: \.self) { date in
+                dayCell(date)
             }
         }
     }
 
     private func dayCell(_ date: Date) -> some View {
         let normalizedDate = calendar.startOfDay(for: date)
-        let problems = store.scheduledByDay[normalizedDate, default: []]
+        let isPast = isPastDay(normalizedDate)
+        let problems = problems(on: normalizedDate, isPast: isPast)
         let isSelected = calendar.isDate(normalizedDate, inSameDayAs: selectedDate)
         let isToday = calendar.isDateInToday(normalizedDate)
+        let countDescription = isPast
+            ? "\(problems.count) question\(problems.count == 1 ? "" : "s") finished"
+            : "\(problems.count) review\(problems.count == 1 ? "" : "s") scheduled"
 
         return Button {
             selectedDate = normalizedDate
         } label: {
             VStack(spacing: 3) {
+                Text(normalizedDate.formatted(.dateTime.weekday(.narrow)))
+                    .font(.system(size: 9, weight: .semibold, design: .rounded))
+                    .foregroundColor(isSelected ? .white : LiquidTheme.secondaryText)
+
                 Text("\(calendar.component(.day, from: normalizedDate))")
-                    .font(.caption.monospacedDigit().weight(isToday ? .bold : .regular))
+                    .font(.caption.monospacedDigit().weight(isToday ? .bold : .medium))
                     .foregroundColor(.white)
 
-                if problems.isEmpty {
-                    Circle()
-                        .fill(Color.clear)
-                        .frame(width: 5, height: 5)
-                } else {
+                HStack(spacing: 2) {
+                    Image(systemName: isPast ? "checkmark" : "clock")
                     Text("\(problems.count)")
-                        .font(.system(size: 8, weight: .bold, design: .rounded))
-                        .foregroundColor(isSelected ? .white : .green)
                 }
+                .font(.system(size: 8, weight: .bold, design: .rounded))
+                .foregroundColor(isSelected ? .white : LiquidTheme.accent)
+                .frame(height: 9)
+                .opacity(problems.isEmpty ? 0 : 1)
             }
-            .frame(maxWidth: .infinity, minHeight: 44)
+            .frame(maxWidth: .infinity, minHeight: 50)
             .background(
                 RoundedRectangle(cornerRadius: 8, style: .continuous)
-                    .fill(isSelected ? Color.green : cellBackground(problems: problems, isToday: isToday))
+                    .fill(
+                        isSelected
+                            ? LiquidTheme.accent.opacity(0.24)
+                            : cellBackground(hasItems: !problems.isEmpty, isToday: isToday)
+                    )
             )
             .overlay(
                 RoundedRectangle(cornerRadius: 8, style: .continuous)
-                    .stroke(isToday && !isSelected ? Color.green : Color.clear, lineWidth: 1)
+                    .stroke(
+                        isSelected
+                            ? Color.white.opacity(0.18)
+                            : (isToday ? LiquidTheme.accent.opacity(0.85) : Color.white.opacity(0.07)),
+                        lineWidth: isToday ? 1 : 0.6
+                    )
+            )
+            .shadow(
+                color: isSelected ? LiquidTheme.accent.opacity(0.18) : .clear,
+                radius: 6,
+                y: 2
             )
         }
         .buttonStyle(.plain)
-        .help(problems.isEmpty ? "No review scheduled" : "\(problems.count) review(s)")
+        .help(problems.isEmpty ? (isPast ? "No questions finished" : "No reviews scheduled") : countDescription)
+        .accessibilityLabel(
+            "\(normalizedDate.formatted(date: .complete, time: .omitted)), \(countDescription)"
+        )
+        .accessibilityValue(
+            [isToday ? "Today" : nil, isSelected ? "Selected" : nil]
+                .compactMap { $0 }
+                .joined(separator: ", ")
+        )
+        .accessibilityAddTraits(isSelected ? .isSelected : [])
     }
 
     private var selectedDayCard: some View {
-        let problems = store.scheduledByDay[calendar.startOfDay(for: selectedDate), default: []]
+        let normalizedDate = calendar.startOfDay(for: selectedDate)
+        let isPast = isPastDay(normalizedDate)
+        let problems = problems(on: normalizedDate, isPast: isPast)
 
         return SectionCard(
-            selectedDate.formatted(.dateTime.weekday(.wide).month(.wide).day()),
-            systemImage: "list.bullet"
+            selectedDate.formatted(.dateTime.weekday(.wide).month(.abbreviated).day()),
+            systemImage: isPast ? "checkmark.circle" : "calendar.badge.clock",
+            showsBackground: false
         ) {
             if problems.isEmpty {
-                Text("No questions are scheduled for this day.")
+                Text(isPast ? "No questions finished." : "No questions scheduled.")
                     .font(.subheadline)
-                    .foregroundColor(Color.white.opacity(0.58))
+                    .foregroundColor(LiquidTheme.secondaryText)
             } else {
                 ForEach(problems) { problem in
-                    HStack {
-                        Circle()
-                            .fill(Color.green)
-                            .frame(width: 6, height: 6)
+                    HStack(spacing: 8) {
+                        Image(systemName: isPast ? "checkmark.circle.fill" : "circle")
+                            .font(.caption)
+                            .foregroundColor(
+                                isPast ? LiquidTheme.accent : LiquidTheme.secondaryText
+                            )
                         Text(problem.name)
                             .font(.subheadline)
-                        Spacer()
+                            .lineLimit(1)
+                        Spacer(minLength: 8)
+                        if isPast, let rating = problem.lastRating {
+                            Text("\(rating)/5")
+                                .font(.caption2.monospacedDigit().weight(.semibold))
+                                .foregroundColor(LiquidTheme.secondaryText)
+                                .padding(.horizontal, 5)
+                                .frame(height: 16)
+                                .background(
+                                    Capsule(style: .continuous)
+                                        .fill(Color.white.opacity(0.06))
+                                )
+                        }
                         ExternalLinkButton(urlString: problem.url)
                     }
                 }
             }
-
-            Text("The calendar shows each in-progress question's next known review. Later reviews depend on the rating you give next time.")
-                .font(.caption2)
-                .foregroundColor(Color.white.opacity(0.58))
-                .padding(.top, 2)
         }
     }
 
-    private var monthCells: [Date?] {
-        let start = monthStart(for: visibleMonth)
-        guard let dayRange = calendar.range(of: .day, in: .month, for: start) else { return [] }
-        let leadingBlanks = calendar.component(.weekday, from: start) - 1
-        let blanks: [Date?] = Array(repeating: nil, count: leadingBlanks)
-        let days: [Date?] = dayRange.compactMap { day in
-            calendar.date(byAdding: .day, value: day - 1, to: start)
+    private var weekStart: Date {
+        calendar.dateInterval(of: .weekOfYear, for: visibleWeekAnchor)?.start
+            ?? calendar.startOfDay(for: visibleWeekAnchor)
+    }
+
+    private var weekDates: [Date] {
+        (0..<7).compactMap { offset in
+            calendar.date(byAdding: .day, value: offset, to: weekStart)
         }
-        return blanks + days
     }
 
-    private func moveMonth(by value: Int) {
-        let newMonth = calendar.date(byAdding: .month, value: value, to: visibleMonth) ?? visibleMonth
-        visibleMonth = newMonth
-        selectedDate = monthStart(for: newMonth)
+    private var weekRangeTitle: String {
+        guard let firstDate = weekDates.first, let lastDate = weekDates.last else { return "This week" }
+
+        let formatter = DateIntervalFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .none
+        return formatter.string(from: firstDate, to: lastDate)
     }
 
-    private func monthStart(for date: Date) -> Date {
-        calendar.date(from: calendar.dateComponents([.year, .month], from: date)) ?? date
+    private func moveWeek(by value: Int) {
+        visibleWeekAnchor = calendar.date(
+            byAdding: .weekOfYear,
+            value: value,
+            to: visibleWeekAnchor
+        ) ?? visibleWeekAnchor
+        selectedDate = calendar.date(
+            byAdding: .weekOfYear,
+            value: value,
+            to: selectedDate
+        ) ?? selectedDate
     }
 
-    private func cellBackground(problems: [PracticeProblem], isToday: Bool) -> Color {
-        if !problems.isEmpty { return Color.green.opacity(0.13) }
-        if isToday { return Color.green.opacity(0.05) }
-        return Color.white.opacity(0.055)
+    private func isPastDay(_ date: Date) -> Bool {
+        date < calendar.startOfDay(for: Date())
+    }
+
+    private func problems(on date: Date, isPast: Bool) -> [PracticeProblem] {
+        if isPast {
+            return store.finishedByDay[date, default: []]
+        }
+        return store.scheduledByDay[date, default: []]
+    }
+
+    private func cellBackground(hasItems: Bool, isToday: Bool) -> Color {
+        if hasItems { return LiquidTheme.accent.opacity(0.12) }
+        if isToday { return LiquidTheme.accent.opacity(0.055) }
+        return Color.white.opacity(0.04)
     }
 }

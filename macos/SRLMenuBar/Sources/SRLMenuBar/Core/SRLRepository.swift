@@ -73,7 +73,15 @@ actor SRLRepository {
         try ensureDataDirectory()
         return try withDataLock(exclusive: true) {
             var snapshot = try loadSnapshotWithoutPreparingDirectory()
-            let canonicalName = canonicalKey(in: snapshot.inProgress, matching: trimmedName) ?? trimmedName
+            let exactName = canonicalKey(in: snapshot.inProgress, matching: trimmedName)
+            let dueNames = SRLScheduler.dueProblems(
+                in: snapshot,
+                on: date,
+                calendar: calendar
+            ).map(\.name)
+            let canonicalName = exactName
+                ?? ProblemNameMatcher.uniqueNearMatch(for: trimmedName, among: dueNames)
+                ?? trimmedName
             var record = snapshot.inProgress[canonicalName] ?? ProblemRecord()
 
             let queueKey = canonicalKey(in: snapshot.nextUp, matching: canonicalName)

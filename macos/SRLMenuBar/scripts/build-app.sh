@@ -28,8 +28,14 @@ mkdir -p "${APP_BUNDLE}/Contents/Resources"
 
 cp "${BUILD_DIRECTORY}/SRLMenuBar" "${APP_BUNDLE}/Contents/MacOS/SRLMenuBar"
 cp "${PACKAGE_DIRECTORY}/Packaging/Info.plist" "${APP_BUNDLE}/Contents/Info.plist"
-cp "${PACKAGE_DIRECTORY}/Sources/SRLMenuBar/Resources/neetcode_150_route.csv" \
-    "${APP_BUNDLE}/Contents/Resources/neetcode_150_route.csv"
+cp "${PACKAGE_DIRECTORY}/Packaging/AppIcon.icns" \
+    "${APP_BUNDLE}/Contents/Resources/AppIcon.icns"
+cp "${PACKAGE_DIRECTORY}/Packaging/AppIcon.png" \
+    "${APP_BUNDLE}/Contents/Resources/AppIcon.png"
+for route_resource in blind_75_route neetcode_150_route neetcode_250_route; do
+    cp "${PACKAGE_DIRECTORY}/Sources/SRLMenuBar/Resources/${route_resource}.csv" \
+        "${APP_BUNDLE}/Contents/Resources/${route_resource}.csv"
+done
 
 chmod +x "${APP_BUNDLE}/Contents/MacOS/SRLMenuBar"
 codesign --force --deep --sign - "${APP_BUNDLE}"

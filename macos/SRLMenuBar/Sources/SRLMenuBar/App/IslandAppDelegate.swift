@@ -12,6 +12,7 @@ enum IslandMetrics {
 @MainActor
 final class IslandAppDelegate: NSObject, NSApplicationDelegate {
     private let store = SRLDataStore()
+    private var statusItem: NSStatusItem?
     private var panel: IslandPanel?
     private var islandContainer: NSView?
     private var hostingView: NSView?
@@ -24,10 +25,78 @@ final class IslandAppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         NSApp.setActivationPolicy(.accessory)
+        configureStatusItem()
         configureIsland()
         startHoverMonitoring()
 
         Task { await store.refresh() }
+    }
+
+    private func configureStatusItem() {
+        let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
+
+        if let button = statusItem.button {
+            if let iconURL = Bundle.main.url(forResource: "AppIcon", withExtension: "png"),
+               let image = NSImage(contentsOf: iconURL) {
+                image.size = NSSize(width: 18, height: 18)
+                image.isTemplate = false
+                button.image = image
+            } else {
+                let image = NSImage(
+                    systemSymbolName: "brain.head.profile",
+                    accessibilityDescription: "Spaced Repetition"
+                )
+                image?.isTemplate = true
+                button.image = image
+            }
+            button.imagePosition = .imageOnly
+            button.toolTip = "Spaced Repetition"
+        }
+
+        let menu = NSMenu()
+        let showItem = NSMenuItem(
+            title: "Show Spaced Repetition",
+            action: #selector(showIslandFromStatusItem),
+            keyEquivalent: ""
+        )
+        showItem.target = self
+        menu.addItem(showItem)
+        menu.addItem(.separator())
+
+        let quitItem = NSMenuItem(
+            title: "Quit Spaced Repetition",
+            action: #selector(quitFromStatusItem),
+            keyEquivalent: "q"
+        )
+        quitItem.target = self
+        menu.addItem(quitItem)
+
+        statusItem.menu = menu
+        self.statusItem = statusItem
+    }
+
+    @objc
+    private func showIslandFromStatusItem() {
+        cancelCollapse()
+        panel?.orderFrontRegardless()
+
+        guard !isAnimating else {
+            Task { @MainActor [weak self] in
+                try? await Task.sleep(nanoseconds: 500_000_000)
+                self?.showIslandFromStatusItem()
+            }
+            return
+        }
+
+        if !isExpanded {
+            expandIsland()
+        }
+        panel?.makeKeyAndOrderFront(nil)
+    }
+
+    @objc
+    private func quitFromStatusItem() {
+        NSApp.terminate(nil)
     }
 
     func applicationWillTerminate(_ notification: Notification) {

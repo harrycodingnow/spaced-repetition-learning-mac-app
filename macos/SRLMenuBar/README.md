@@ -5,14 +5,16 @@ A native SwiftUI companion for the `srl` CLI. An invisible hover target matches 
 ## MVP features
 
 - A compact, half-height Today view with question entry above side-by-side revise/new queues.
+- Native Liquid Glass navigation and controls on macOS 26, with material fallbacks on older Macs.
 - No-click hover opening with a two-stage notch morph, overshoot, and soft settle.
+- A persistent menu-bar icon with Show and Quit actions.
 - Transparent collapsed state and a black expanded surface connected to the top screen edge.
-- Quick question-name input with a 1–5 completion rating.
+- Quick 1–5 rating input with Tab autocomplete, including shorthand such as `Two Sum -5`.
 - The CLI-compatible schedule: a rating of `n` schedules the next review in `n` days.
 - Mastery after two consecutive ratings of 5.
 - A 52-week activity heatmap in its own Activity tab.
-- A monthly calendar showing each in-progress question's next known review.
-- A topic-grouped, ordered NeetCode 150 route.
+- A weekly calendar with previous/next navigation for past completions and upcoming reviews.
+- Selectable, topic-grouped Blind 75, NeetCode 150, and NeetCode 250 routes.
 
 ## Requirements
 

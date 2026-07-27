@@ -62,6 +62,33 @@ struct SRLRepositoryTests {
         #expect(snapshot.inProgress["two sum"]?.history.first?.date == "2026-07-23")
     }
 
+    @Test("A unique typo appends to the canonical due question")
+    func dueQuestionTypo() async throws {
+        let fixture = try TemporarySRLDirectory()
+        defer { fixture.remove() }
+        let existing = [
+            "Valid Palindrome": ProblemRecord(
+                history: [Attempt(rating: 1, date: "2026-07-22")],
+                url: "https://leetcode.com/problems/valid-palindrome/description/"
+            ),
+        ]
+        try fixture.write(existing, filename: "problems_in_progress.json")
+        let repository = SRLRepository(dataDirectory: fixture.url)
+        let day = try #require(SRLDay.parse("2026-07-23", calendar: calendar))
+
+        let result = try await repository.recordAttempt(
+            problem: "valid palindrom",
+            rating: 4,
+            on: day,
+            calendar: calendar
+        )
+        let snapshot = try await repository.loadSnapshot()
+
+        #expect(result.problemName == "Valid Palindrome")
+        #expect(snapshot.inProgress["Valid Palindrome"]?.history.map(\.rating) == [1, 4])
+        #expect(snapshot.inProgress["valid palindrom"] == nil)
+    }
+
     @Test("Rewriting Next Up records adds stable NeetCode route indexes")
     func queueRouteOrder() async throws {
         let fixture = try TemporarySRLDirectory()
@@ -102,6 +129,44 @@ struct SRLRepositoryTests {
         } catch {
             #expect(error.localizedDescription.contains("problems_in_progress.json"))
         }
+    }
+
+    @MainActor
+    @Test("A successful store save immediately advances the visible route")
+    func storeSaveAdvancesRoute() async throws {
+        let fixture = try TemporarySRLDirectory()
+        defer { fixture.remove() }
+        let suiteName = "StoreRouteAdvanceTests.\(UUID().uuidString)"
+        let preferences = try #require(UserDefaults(suiteName: suiteName))
+        preferences.removePersistentDomain(forName: suiteName)
+        defer { preferences.removePersistentDomain(forName: suiteName) }
+
+        let route = (1...4).map { index in
+            RouteProblem(
+                routeIndex: index,
+                category: "Arrays",
+                name: "Question \(index)",
+                url: "https://example.com/question-\(index)/"
+            )
+        }
+        let store = SRLDataStore(
+            repository: SRLRepository(dataDirectory: fixture.url),
+            routes: [.neetCode150: route],
+            preferences: preferences,
+            calendar: calendar
+        )
+
+        await store.refresh()
+        #expect(Array(store.remainingRoute.prefix(3)).map(\.routeIndex) == [1, 2, 3])
+
+        let saved = await store.recordAttempt(
+            problem: route[0].name,
+            rating: 3,
+            url: route[0].url
+        )
+
+        #expect(saved)
+        #expect(Array(store.remainingRoute.prefix(3)).map(\.routeIndex) == [2, 3, 4])
     }
 }
 

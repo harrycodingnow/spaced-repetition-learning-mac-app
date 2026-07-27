@@ -27,21 +27,25 @@ struct RouteView: View {
 
     var body: some View {
         ScrollView {
-            VStack(spacing: 12) {
-                SectionCard("NeetCode 150 route", systemImage: "point.topleft.down.curvedto.point.bottomright.up") {
+            LazyVStack(spacing: 12) {
+                SectionCard(
+                    "Route progress",
+                    systemImage: "point.topleft.down.curvedto.point.bottomright.up",
+                    headerAccessory: { StudyRoutePicker() }
+                ) {
                     HStack {
                         Text("\(store.routeCompletedCount) of \(store.route.count) started or mastered")
                             .font(.subheadline)
                         Spacer()
                         Text("\(routePercent)%")
                             .font(.subheadline.monospacedDigit().weight(.semibold))
-                            .foregroundColor(.green)
+                            .foregroundColor(LiquidTheme.accent)
                     }
                     ProgressView(
                         value: Double(store.routeCompletedCount),
                         total: Double(max(store.route.count, 1))
                     )
-                    .tint(.green)
+                    .tint(LiquidTheme.accent)
                 }
 
                 ForEach(categories, id: \.self) { category in
@@ -52,7 +56,8 @@ struct RouteView: View {
                     }
                 }
             }
-            .padding(.horizontal, 16)
+            .id(store.selectedStudyRoute)
+            .padding(.horizontal, 14)
             .padding(.bottom, 16)
         }
     }
@@ -63,15 +68,15 @@ struct RouteView: View {
 
         return HStack(spacing: 9) {
             Image(systemName: completed ? "checkmark.circle.fill" : "circle")
-                .foregroundColor(completed ? .green : Color.white.opacity(0.48))
+                .foregroundColor(completed ? LiquidTheme.accent : LiquidTheme.tertiaryText)
             Text("\(problem.routeIndex)")
                 .font(.caption.monospacedDigit())
-                .foregroundColor(Color.white.opacity(0.48))
+                .foregroundColor(LiquidTheme.tertiaryText)
                 .frame(width: 24, alignment: .trailing)
             Text(problem.name)
                 .font(.subheadline)
-                .strikethrough(completed, color: Color.white.opacity(0.48))
-                .foregroundColor(completed ? Color.white.opacity(0.48) : .white)
+                .strikethrough(completed, color: LiquidTheme.tertiaryText)
+                .foregroundColor(completed ? LiquidTheme.tertiaryText : .white)
                 .lineLimit(1)
             Spacer()
             ExternalLinkButton(urlString: problem.url)

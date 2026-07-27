@@ -89,6 +89,13 @@ struct PracticeProblem: Identifiable, Equatable, Sendable {
     var id: String { name.lowercased() }
 }
 
+struct ActivityQuestionSummary: Identifiable, Equatable, Sendable {
+    let id: String
+    let name: String
+    let url: String?
+    let attemptCount: Int
+}
+
 struct RouteProblem: Identifiable, Equatable, Sendable {
     let routeIndex: Int
     let category: String
@@ -116,7 +123,17 @@ enum SRLDay {
             return nil
         }
 
-        return calendar.date(from: DateComponents(year: year, month: month, day: day))
+        guard let date = calendar.date(from: DateComponents(year: year, month: month, day: day))
+        else {
+            return nil
+        }
+
+        let resolved = calendar.dateComponents([.year, .month, .day], from: date)
+        guard resolved.year == year, resolved.month == month, resolved.day == day else {
+            return nil
+        }
+
+        return date
     }
 
     static func string(_ date: Date, calendar: Calendar = .current) -> String {

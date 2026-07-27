@@ -4,10 +4,13 @@ A native SwiftUI companion for the `srl` CLI. Hover over the MacBook notch to op
 
 ## Features
 
+- Native Liquid Glass interface on macOS 26 with material fallbacks for macOS 13–15.
 - Transparent notch-sized hover target with an animated Dynamic Island interface.
-- Log a completed question and rate it from 1–5.
-- Separate queues for reviews due today and new NeetCode 150 questions.
-- Weekly activity, future review calendar, and ordered NeetCode 150 route.
+- Menu-bar icon beside the clock with controls to show or quit the app.
+- Log and rate a question from 1–5, with Tab autocomplete and shorthand such as `Two Sum -5`.
+- Separate queues for reviews due today and new route questions.
+- Selectable Blind 75, NeetCode 150, and NeetCode 250 routes.
+- Weekly calendar for past completions and upcoming reviews.
 - Shared `~/.srl` data with the Python CLI.
 
 A rating of `n` schedules the next review in `n` days. Two consecutive ratings of 5 mark a question as mastered.
